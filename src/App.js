@@ -5,6 +5,7 @@ import TimeTracker from './TimeTracker';
 import TodoList from './TodoList';
 import './App.css';
 import TopBar from './TopBar';
+import Navbar from './Navbar';
 
 const App = () => {
   const [tasks, setTasks] = useState([]);
@@ -20,24 +21,9 @@ const App = () => {
 
   return (
     <Router>
-      <TopBar tasks={tasks} />
-      <div style={{ display: 'flex' }}>
-        <nav className="sidebar">
-          <ul>
-            <li>
-              <Link to="/time-tracker">
-                <FaClock /> Czas pracy
-              </Link>
-            </li>
-            <li>
-              <Link to="/todo-list">
-                <FaClipboardList /> Todo List
-              </Link>
-            </li>
-          </ul>
-        </nav>
-
-
+      <div>
+        <Navbar />
+        <TopBar tasks={tasks} />
         <div className="container">
           <Routes>
             <Route path="/time-tracker" element={<TimeTracker />} />

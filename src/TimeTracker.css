@@ -4,6 +4,37 @@
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
+    overflow-x: auto;
+}
+
+.time-tracker .buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    gap: 10px;
+}
+
+.time-tracker .error {
+    color: red;
+    margin-bottom: 10px;
+    border: 1px solid red;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: pink;
+    text-align: center;
+    position: absolute;
+    top: 25px;
+    left: 0;
+    right: 0;
+    transition: opacity 0.5s ease;
+}
+
+.time-tracker .error.show {
+    opacity: 1;
+}
+
+.time-tracker .error.hide {
+    opacity: 0;
 }
 
 .time-tracker input {
@@ -11,13 +42,17 @@
     padding: 10px;
     border-radius: 5px;
     border: 1px solid #ccc;
-    width: calc(100% - 24px);
+    width: 200px
 }
 
 .history-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
+}
+
+.history-table button {
+    margin: 2px 0;
 }
 
 .history-table th,
@@ -51,4 +86,14 @@
 
 .history-table tr:last-child td:nth-child(4) {
     color: #99a9f0;
+}
+
+.history-table .actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.empty {
+    background-color: antiquewhite !important;
 }

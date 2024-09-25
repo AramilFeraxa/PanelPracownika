@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './TopBar.css';
+import { FaBell, FaTimes } from 'react-icons/fa';
 
 const TopBar = ({ tasks }) => {
     const [showNotifications, setShowNotifications] = useState(false);
@@ -22,12 +23,12 @@ const TopBar = ({ tasks }) => {
         <div className="top-bar">
             <h1>Panel Pracownika</h1>
             <div className="notification-icon" onClick={() => setShowNotifications(!showNotifications)}>
-                🛎️
+                <FaBell />
                 {upcomingTasks.length > 0 && <span className="notification-count">{upcomingTasks.length}</span>}
             </div>
             {showNotifications && (
                 <div className="notifications">
-                    <icon className="close-icon" onClick={() => setShowNotifications(false)}>❌</icon>
+                    <FaTimes className="close-icon" onClick={() => setShowNotifications(false)} />
                     <h3>Powiadomienia</h3>
                     {upcomingTasks.length > 0 ? (
                         upcomingTasks.map(task => (
