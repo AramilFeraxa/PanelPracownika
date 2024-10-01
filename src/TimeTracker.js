@@ -218,7 +218,7 @@ const TimeTracker = () => {
                             <tr key={entry.id} className={entry.total === 0 ? 'empty' : ''}>
                                 <td>{formattedDate}<br /><small>({new Date(entry.date).toLocaleString('pl-PL', { weekday: 'long' })})</small></td>
                                 <td>{entry.startTime !== '00:00' ? entry.startTime : ''}</td>
-                                <td>{entry.endTime !== '00:00' ? entry.startTime : ''}</td>
+                                <td>{entry.endTime !== '00:00' ? entry.endTime : ''}</td>
                                 <td>{entry.total}</td>
                                 <td className="actions">
                                     <button onClick={() => editWorkTime(entry)} className="editButton">Edytuj</button>
