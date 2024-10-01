@@ -9,6 +9,7 @@ const TimeTracker = () => {
     const [editingEntry, setEditingEntry] = useState(null);
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
     const [isVisible, setIsVisible] = useState(false);
     const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
 
@@ -35,17 +36,18 @@ const TimeTracker = () => {
     }, []);
 
     useEffect(() => {
-        if (error) {
+        if (error || success) {
             setIsVisible(true);
 
             const timeout = setTimeout(() => {
                 setIsVisible(false);
                 setTimeout(() => setError(''), 500);
+                setTimeout(() => setSuccess(''), 500);
             }, 3000);
 
             return () => clearTimeout(timeout);
         }
-    }, [error]);
+    }, [error, success]);
 
     const deleteWorkTime = async (entry) => {
         await fetch(`https://panel-pracownika.azurewebsites.net/api/WorkTime/${entry.id}`, {
@@ -54,30 +56,30 @@ const TimeTracker = () => {
         fetchWorkHistory();
     };
 
-    const saveWorkTime = async () => {
+    const saveWorkTime = async (entry) => {
         const requestBody = {
-            id: editingEntry ? editingEntry.id : undefined,
-            date: date,
-            startTime: startTime || '00:00',
-            endTime: endTime || '00:00',
+            id: entry ? entry.id : undefined,
+            date: entry ? entry.date : date,
+            startTime: entry ? entry.startTime : startTime || '00:00',
+            endTime: entry ? entry.endTime : endTime || '00:00',
         };
 
-        if (startTime >= endTime && endTime !== '') {
-            console.log(startTime, endTime);
+        if (requestBody.startTime >= requestBody.endTime && requestBody.endTime !== '') {
             setError('Godzina zakończenia musi być późniejsza niż godzina rozpoczęcia.');
             return;
         }
 
         let response;
-        if (editingEntry) {
+        if (entry) {
             // Update existing entry
-            response = await fetch(`https://panel-pracownika.azurewebsites.net/api/WorkTime/${editingEntry.id}`, {
+            response = await fetch(`https://panel-pracownika.azurewebsites.net/api/WorkTime/${entry.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(requestBody),
             });
+            setSuccess('Zmiany zostały zapisane.');
         } else {
             if (history[selectedMonth]?.some(entry => entry.date.split('T')[0] === date)) {
                 setError('Możesz dodać tylko jeden wpis na dzień.');
@@ -91,58 +93,68 @@ const TimeTracker = () => {
                 },
                 body: JSON.stringify(requestBody),
             });
+            setSuccess('Zmiany zostały zapisane.');
         }
 
         fetchWorkHistory();
-        setStartTime('');
-        setEndTime('');
         setEditingEntry(null);
     };
 
     const editWorkTime = (entry) => {
-        setEditingEntry(entry);
-        setDate(entry.date.split('T')[0]);
-        setStartTime(entry.startTime);
-        setEndTime(entry.endTime);
+        setEditingEntry(entry.id);
+    };
+
+    const handleInputChange = (e, field, entry) => {
+        const value = e.target.value;
+        setHistory((prevHistory) => ({
+            ...prevHistory,
+            [selectedMonth]: prevHistory[selectedMonth].map((item) =>
+                item.id === entry.id ? { ...item, [field]: value } : item
+            ),
+        }));
     };
 
     const exportToExcel = () => {
         const workbook = XLSX.utils.book_new();
+        const monthData = history[selectedMonth] || [];
 
-        for (let month = 0; month < 12; month++) {
-            const monthData = history[month] || [];
-
-            if (monthData.length > 0) {
-                const data = monthData.map(entry => {
+        if (monthData.length > 0) {
+            const data = monthData.map(entry => {
+                if (entry.startTime && entry.endTime && entry.startTime !== '00:00' && entry.endTime !== '00:00') {
                     const start = new Date(`1970-01-01T${entry.startTime}:00`);
                     const end = new Date(`1970-01-01T${entry.endTime}:00`);
                     const hoursWorked = ((end - start) / (1000 * 60 * 60)).toFixed(2);
 
                     return {
-                        Data: entry.date,
+                        Data: entry.date.split('T')[0],
                         "Czas rozpoczęcia": entry.startTime,
                         "Czas zakończenia": entry.endTime,
                         "Godziny pracy": hoursWorked,
                     };
-                });
+                } else {
+                    return {
+                        Data: entry.date.split('T')[0],
+                        "Czas rozpoczęcia": "",
+                        "Czas zakończenia": "",
+                        "Godziny pracy": "0.00",
+                    };
+                }
+            });
 
-                const totalHours = data.reduce((total, entry) => total + parseFloat(entry["Godziny pracy"]), 0).toFixed(2);
+            const totalHours = calculateTotalHours();
+            data.push({
+                Data: "Suma:",
+                "Czas rozpoczęcia": "",
+                "Czas zakończenia": "",
+                "Godziny pracy": totalHours,
+            });
 
-                data.push({
-                    Data: "Suma:",
-                    "Czas rozpoczęcia": "",
-                    "Czas zakończenia": "",
-                    "Godziny pracy": totalHours,
-                });
-
-                const ws = XLSX.utils.json_to_sheet(data);
-                XLSX.utils.book_append_sheet(workbook, ws, new Date(0, month).toLocaleString('pl-PL', { month: 'long' }));
-            }
+            const ws = XLSX.utils.json_to_sheet(data);
+            XLSX.utils.book_append_sheet(workbook, ws, new Date(0, selectedMonth).toLocaleString('pl-PL', { month: 'long' }));
         }
 
-        XLSX.writeFile(workbook, "Czas_Pracy.xlsx");
+        XLSX.writeFile(workbook, `Mateusz_Kopec_godziny_${new Date(0, selectedMonth).toLocaleString('pl-PL', { month: 'long' })}.xlsx`);
     };
-
 
     const calculateTotalHours = () => {
         return history[selectedMonth]?.reduce((total, entry) => {
@@ -157,6 +169,11 @@ const TimeTracker = () => {
             {error && (
                 <div className={`error ${isVisible ? 'show' : 'hide'}`}>
                     {error}
+                </div>
+            )}
+            {success && (
+                <div className={`success ${isVisible ? 'show' : 'hide'}`}>
+                    {success}
                 </div>
             )}
             <h2>Czas pracy</h2>
@@ -185,8 +202,7 @@ const TimeTracker = () => {
                 />
             </div>
             <div className="buttons">
-                <button onClick={saveWorkTime}>{editingEntry ? 'Zaktualizuj' : 'Zapisz'}</button>
-                {editingEntry && <button onClick={() => setEditingEntry(null)}>Anuluj</button>}
+                <button onClick={() => saveWorkTime(null)}>Zapisz</button>
                 <button onClick={exportToExcel}>Eksportuj do Excela</button>
             </div>
             <div>
@@ -212,26 +228,49 @@ const TimeTracker = () => {
                 </thead>
                 <tbody>
                     {entriesToShow.slice().reverse().map((entry) => {
+                        const isEditing = editingEntry === entry.id;
                         const formattedDate = new Date(entry.date).toLocaleDateString('en-CA');
 
                         return (
                             <tr key={entry.id} className={entry.total === 0 ? 'empty' : ''}>
                                 <td>{formattedDate}<br /><small>({new Date(entry.date).toLocaleString('pl-PL', { weekday: 'long' })})</small></td>
-                                <td>{entry.startTime !== '00:00' ? entry.startTime : ''}</td>
-                                <td>{entry.endTime !== '00:00' ? entry.endTime : ''}</td>
+                                <td>
+                                    {isEditing ? (
+                                        <input
+                                            type="time"
+                                            value={entry.startTime}
+                                            onChange={(e) => handleInputChange(e, 'startTime', entry)}
+                                        />
+                                    ) : (
+                                        entry.startTime
+                                    )}
+                                </td>
+                                <td>
+                                    {isEditing ? (
+                                        <input
+                                            type="time"
+                                            value={entry.endTime}
+                                            onChange={(e) => handleInputChange(e, 'endTime', entry)}
+                                        />
+                                    ) : (
+                                        entry.endTime
+                                    )}
+                                </td>
                                 <td>{entry.total}</td>
                                 <td className="actions">
-                                    <button onClick={() => editWorkTime(entry)} className="editButton">Edytuj</button>
-                                    <button onClick={() => deleteWorkTime(entry)} className="deleteButton">Usuń</button>
+                                    {isEditing ? (
+                                        <button className="editButton" onClick={() => saveWorkTime(entry)}>Zapisz</button>
+                                    ) : (
+                                        <button className="editButton" onClick={() => editWorkTime(entry)}>Edytuj</button>
+                                    )}
+                                    <button className="deleteButton" onClick={() => deleteWorkTime(entry)}>Usuń</button>
                                 </td>
                             </tr>
                         );
                     })}
                     <tr>
-                        <td><strong>Suma:</strong></td>
-                        <td></td>
-                        <td></td>
-                        <td><strong>{calculateTotalHours()}</strong></td>
+                        <td colSpan="3">Suma godzin:</td>
+                        <td>{calculateTotalHours()}</td>
                     </tr>
                 </tbody>
             </table>
