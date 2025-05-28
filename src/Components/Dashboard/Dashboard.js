@@ -1,6 +1,6 @@
 import React from 'react';
 import './Dashboard.css';
-import { FaClock, FaClipboardList, FaChartBar } from 'react-icons/fa';
+import { FaClock, FaClipboardList, FaChartBar, FaCalendar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
@@ -26,6 +26,11 @@ const Dashboard = () => {
                     <FaChartBar className="icon" />
                     <h3>Statystyki</h3>
                     <p>Przeglądaj swoje miesięczne statystyki pracy.</p>
+                </div>
+                <div className="card" onClick={() => navigate('/delegacje')}>
+                    <FaCalendar className="icon" />
+                    <h3>Delegacje</h3>
+                    <p>Zarządzaj swoimi delegacjami i przeglądaj kalendarz.</p>
                 </div>
             </div>
         </div>

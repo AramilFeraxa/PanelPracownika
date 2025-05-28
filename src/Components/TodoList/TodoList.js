@@ -81,7 +81,7 @@ const TodoList = ({ taski }) => {
 
     return (
         <div className="todo-list">
-            <h2>Todo List</h2>
+            <h2>Lista zadań</h2>
             <input
                 type="text"
                 value={task}
@@ -112,7 +112,7 @@ const TodoList = ({ taski }) => {
 
             <h3>
                 Archiwum zadań
-                <button onClick={() => setShowArchived(!showArchived)}>
+                <button onClick={() => setShowArchived(!showArchived)} style={{ marginLeft: '10px' }}>
                     {showArchived ? 'Ukryj' : 'Pokaż'}
                 </button>
             </h3>

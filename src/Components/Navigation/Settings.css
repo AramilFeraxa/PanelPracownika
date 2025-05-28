@@ -1,0 +1,29 @@
+.settings-page {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: auto;
+}
+
+.settings-page .form-group {
+    margin-bottom: 15px;
+}
+
+.settings-page label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.settings-page input {
+    width: 97%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.settings-page .success {
+    color: green;
+    margin-top: 10px;
+}

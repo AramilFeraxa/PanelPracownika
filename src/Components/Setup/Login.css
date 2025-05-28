@@ -48,6 +48,11 @@
     background-color: #0a0f2e;
 }
 
+.login-form button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
 .error-message {
     color: #c0392b;
     font-size: 14px;

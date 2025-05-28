@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { FaClock, FaClipboardList } from 'react-icons/fa';
-import TimeTracker from '../TimeTracker/TimeTracker';
+import TimeTracker from '../WorkTime/WorkTime';
 import TodoList from '../TodoList/TodoList';
 import Login from './Login';
 import './App.css';
@@ -9,7 +9,9 @@ import TopBar from '../Navigation/TopBar';
 import Navbar from '../Navigation/Navbar';
 import Dashboard from '../Dashboard/Dashboard';
 import WorkStats from '../WorkStats/WorkStats';
+import Settings from '../Navigation/Settings';
 import { useAuth } from '../../context/AuthContext';
+import CalendarPage from '../Calendar/Calendar';
 
 const App = () => {
   const { token } = useAuth();
@@ -46,6 +48,8 @@ const App = () => {
             <Route path="/czas-pracy" element={token ? <TimeTracker /> : <Navigate to="/" />} />
             <Route path="/todo" element={token ? <TodoList taski={tasks} /> : <Navigate to="/" />} />
             <Route path="/statystyki" element={token ? <WorkStats /> : <Navigate to="/" />} />
+            <Route path="/ustawienia" element={token ? <Settings /> : <Navigate to="/" />} />
+            <Route path="/delegacje" element={<CalendarPage />} />
           </Routes>
         </div>
       </div>

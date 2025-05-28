@@ -29,12 +29,12 @@ const TopBar = ({ tasks }) => {
 
     return (
         <div className="top-bar">
+            <button className="mainpage-button" onClick={() => navigate('/')}>
+                <FaHome />
+            </button>
             <h1>Panel Pracownika</h1>
 
             <div className="topbar-actions">
-                <button className="mainpage-button" onClick={() => navigate('/')}>
-                    <FaHome />
-                </button>
                 <button className="notification-icon" onClick={() => setShowNotifications(!showNotifications)}>
                     <FaBell />
                     {upcomingTasks.length > 0 && <span className="notification-count">{upcomingTasks.length}</span>}

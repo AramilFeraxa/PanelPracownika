@@ -9,24 +9,32 @@ const Login = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
     const { login } = useAuth();
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
 
-        const response = await fetch('https://localhost:7289/api/User/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ username, password })
-        });
+        try {
+            const response = await fetch('https://localhost:7289/api/User/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            });
 
-        if (response.ok) {
-            const result = await response.json();
-            login(result.token);
-            navigate('/');
-        } else {
-            setError('Błędna nazwa użytkownika lub hasło.');
+            if (response.ok) {
+                const result = await response.json();
+                login(result.token);
+                navigate('/');
+            } else {
+                setError('Błędna nazwa użytkownika lub hasło.');
+            }
+        } catch (err) {
+            setError('Wystąpił błąd podczas logowania.');
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -40,6 +48,7 @@ const Login = () => {
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     required
+                    disabled={isLoading}
                 />
                 <input
                     type="password"
@@ -47,8 +56,11 @@ const Login = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    disabled={isLoading}
                 />
-                <button type="submit">Zaloguj się</button>
+                <button type="submit" disabled={isLoading}>
+                    {isLoading ? 'Ładowanie...' : 'Zaloguj się'}
+                </button>
                 {error && <p className="error-message">{error}</p>}
             </form>
         </div>

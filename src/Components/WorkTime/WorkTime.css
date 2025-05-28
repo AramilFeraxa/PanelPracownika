@@ -146,9 +146,10 @@
 .history-table .actions {
     display: flex;
     gap: 8px;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 .empty {
-    background-color: #fff6e5 !important;
+    background-color: #f3f6fc !important;
+    color: #1c2a59;
 }
