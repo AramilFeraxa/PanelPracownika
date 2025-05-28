@@ -1,0 +1,18 @@
+.stats-page {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.stats-page label,
+.stats-page select {
+    font-size: 16px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.stats-page p {
+    margin: 4px 0;
+    font-size: 16px;
+}

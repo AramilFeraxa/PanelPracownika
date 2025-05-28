@@ -7,6 +7,8 @@ const TodoList = ({ taski }) => {
     const [showArchived, setShowArchived] = useState(false);
     const [tasks, setTasks] = useState(taski);
 
+    const token = localStorage.getItem('token');
+
     useEffect(() => {
         setTasks(taski);
     }, [taski]);
@@ -20,10 +22,11 @@ const TodoList = ({ taski }) => {
             completed: false,
         };
 
-        const response = await fetch('https://panel-pracownika.azurewebsites.net/api/tasks', {
+        const response = await fetch('https://localhost:7289/api/tasks', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify(newTask),
         });
@@ -35,25 +38,19 @@ const TodoList = ({ taski }) => {
     };
 
     const toggleTaskCompletion = async (taskId) => {
-        const updatedTasks = tasks.map((t) => {
-            if (t.id === taskId) {
-                const updatedTask = {
-                    ...t,
-                    completed: !t.completed,
-                };
-                return updatedTask;
-            }
-            return t;
-        });
+        const updatedTasks = tasks.map((t) =>
+            t.id === taskId ? { ...t, completed: !t.completed } : t
+        );
 
         setTasks(updatedTasks);
 
-        const taskToUpdate = updatedTasks.find(t => t.id === taskId);
+        const taskToUpdate = updatedTasks.find((t) => t.id === taskId);
 
-        const response = await fetch(`https://panel-pracownika.azurewebsites.net/api/tasks/${taskId}`, {
+        const response = await fetch(`https://localhost:7289/api/tasks/${taskId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
                 id: taskToUpdate.id,
@@ -69,11 +66,14 @@ const TodoList = ({ taski }) => {
         }
     };
 
-
     const deleteTask = async (taskId) => {
-        await fetch(`https://panel-pracownika.azurewebsites.net/api/tasks/${taskId}`, {
+        await fetch(`https://localhost:7289/api/tasks/${taskId}`, {
             method: 'DELETE',
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
         });
+
         setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
     };
 

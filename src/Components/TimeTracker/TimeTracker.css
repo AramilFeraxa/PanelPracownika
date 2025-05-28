@@ -1,0 +1,154 @@
+.time-tracker {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    margin-bottom: 30px;
+    font-family: 'Inter', sans-serif;
+}
+
+.time-tracker h2,
+.time-tracker h3 {
+    color: #1c2a59;
+    margin-bottom: 20px;
+}
+
+.time-tracker label {
+    font-weight: 600;
+    margin-right: 10px;
+    color: #333;
+}
+
+.time-tracker input,
+.time-tracker select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    width: 220px;
+    font-size: 14px;
+}
+
+.time-tracker .buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.time-tracker button {
+    background-color: #1c2a59;
+    color: white;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.time-tracker button:hover {
+    background-color: #2e3f72;
+}
+
+.actions .editButton {
+    background-color: #f0ad4e;
+    color: white;
+}
+
+.actions .editButton:hover {
+    background-color: #ec971f;
+}
+
+.actions .deleteButton {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.actions .deleteButton:hover {
+    background-color: #c0392b;
+}
+
+.time-tracker .error,
+.time-tracker .success {
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: bold;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    transition: opacity 0.5s ease;
+    position: relative;
+}
+
+.time-tracker .error {
+    background-color: #fdecea;
+    color: #c0392b;
+    border: 1px solid #e74c3c;
+}
+
+.time-tracker .success {
+    background-color: #e8f5e9;
+    color: #27ae60;
+    border: 1px solid #2ecc71;
+}
+
+.time-tracker .error.hide,
+.time-tracker .success.hide {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.time-tracker .error.show,
+.time-tracker .success.show {
+    opacity: 1;
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 25px;
+    font-size: 14px;
+}
+
+.history-table th,
+.history-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+}
+
+.history-table th {
+    background-color: #1c2a59;
+    color: white;
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+}
+
+.history-table tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+.history-table tr:hover {
+    background-color: #f0f2f7;
+}
+
+.history-table tr:last-child td {
+    font-weight: bold;
+    color: #1c2a59;
+    background-color: #f3f6fc;
+}
+
+.history-table .actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.empty {
+    background-color: #fff6e5 !important;
+}

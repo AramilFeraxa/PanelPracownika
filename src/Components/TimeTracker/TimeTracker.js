@@ -12,21 +12,47 @@ const TimeTracker = () => {
     const [success, setSuccess] = useState('');
     const [isVisible, setIsVisible] = useState(false);
     const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+
+    const token = localStorage.getItem('token');
 
     const fetchWorkHistory = async () => {
-        const resp = await fetch('https://panel-pracownika.azurewebsites.net/api/WorkTime');
-        const data = await resp.json();
-        const groupedData = groupByMonth(data);
-        setHistory(groupedData);
+        try {
+            const resp = await fetch('https://localhost:7289/api/WorkTime', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            if (!resp.ok) {
+                setError('Nie udało się pobrać danych z serwera.');
+                return;
+            }
+
+            const text = await resp.text();
+            if (!text) {
+                setHistory({});
+                return;
+            }
+
+            const data = JSON.parse(text);
+            const groupedData = groupByMonthAndYear(data);
+            setHistory(groupedData);
+        } catch (err) {
+            console.error(err);
+            setError('Wystąpił błąd przy pobieraniu danych.');
+        }
     };
 
-    const groupByMonth = (history) => {
+    const groupByMonthAndYear = (history) => {
         return history.reduce((acc, entry) => {
-            const month = new Date(entry.date).getMonth();
-            if (!acc[month]) {
-                acc[month] = [];
-            }
-            acc[month].push(entry);
+            const date = new Date(entry.date);
+            const year = date.getFullYear();
+            const month = date.getMonth();
+
+            if (!acc[year]) acc[year] = {};
+            if (!acc[year][month]) acc[year][month] = [];
+            acc[year][month].push(entry);
             return acc;
         }, {});
     };
@@ -38,20 +64,21 @@ const TimeTracker = () => {
     useEffect(() => {
         if (error || success) {
             setIsVisible(true);
-
             const timeout = setTimeout(() => {
                 setIsVisible(false);
                 setTimeout(() => setError(''), 500);
                 setTimeout(() => setSuccess(''), 500);
             }, 3000);
-
             return () => clearTimeout(timeout);
         }
     }, [error, success]);
 
     const deleteWorkTime = async (entry) => {
-        await fetch(`https://panel-pracownika.azurewebsites.net/api/WorkTime/${entry.id}`, {
+        await fetch(`https://localhost:7289/api/WorkTime/${entry.id}`, {
             method: 'DELETE',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
         });
         fetchWorkHistory();
     };
@@ -71,25 +98,27 @@ const TimeTracker = () => {
 
         let response;
         if (entry) {
-            // Update existing entry
-            response = await fetch(`https://panel-pracownika.azurewebsites.net/api/WorkTime/${entry.id}`, {
+            response = await fetch(`https://localhost:7289/api/WorkTime/${entry.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
                 },
                 body: JSON.stringify(requestBody),
             });
             setSuccess('Zmiany zostały zapisane.');
         } else {
-            if (history[selectedMonth]?.some(entry => entry.date.split('T')[0] === date)) {
+            if (history[selectedYear]?.[selectedMonth]?.some(entry => entry.date.split('T')[0] === date)) {
                 setError('Możesz dodać tylko jeden wpis na dzień.');
                 return;
             }
-            // Create new entry
-            response = await fetch('https://panel-pracownika.azurewebsites.net/api/WorkTime', {
+            console.log('requestBody', requestBody);
+
+            response = await fetch('https://localhost:7289/api/WorkTime', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
                 },
                 body: JSON.stringify(requestBody),
             });
@@ -108,15 +137,18 @@ const TimeTracker = () => {
         const value = e.target.value;
         setHistory((prevHistory) => ({
             ...prevHistory,
-            [selectedMonth]: prevHistory[selectedMonth].map((item) =>
-                item.id === entry.id ? { ...item, [field]: value } : item
-            ),
+            [selectedYear]: {
+                ...prevHistory[selectedYear],
+                [selectedMonth]: prevHistory[selectedYear][selectedMonth].map((item) =>
+                    item.id === entry.id ? { ...item, [field]: value } : item
+                ),
+            },
         }));
     };
 
     const exportToExcel = () => {
         const workbook = XLSX.utils.book_new();
-        const monthData = history[selectedMonth] || [];
+        const monthData = history[selectedYear]?.[selectedMonth] || [];
 
         if (monthData.length > 0) {
             const data = monthData.map(entry => {
@@ -153,57 +185,45 @@ const TimeTracker = () => {
             XLSX.utils.book_append_sheet(workbook, ws, new Date(0, selectedMonth).toLocaleString('pl-PL', { month: 'long' }));
         }
 
-        XLSX.writeFile(workbook, `Mateusz_Kopec_godziny_${new Date(0, selectedMonth).toLocaleString('pl-PL', { month: 'long' })}.xlsx`);
+        XLSX.writeFile(workbook, `Mateusz_Kopec_godziny_${new Date(0, selectedMonth).toLocaleString('pl-PL', { month: 'long' })}_${selectedYear}.xlsx`);
     };
 
     const calculateTotalHours = () => {
-        return history[selectedMonth]?.reduce((total, entry) => {
+        return history[selectedYear]?.[selectedMonth]?.reduce((total, entry) => {
             return total + parseFloat(entry.total);
         }, 0).toFixed(2) || '0.00';
     };
 
-    const entriesToShow = history[selectedMonth] || [];
+    const entriesToShow = history[selectedYear]?.[selectedMonth] || [];
 
     return (
         <div className="time-tracker">
-            {error && (
-                <div className={`error ${isVisible ? 'show' : 'hide'}`}>
-                    {error}
-                </div>
-            )}
-            {success && (
-                <div className={`success ${isVisible ? 'show' : 'hide'}`}>
-                    {success}
-                </div>
-            )}
+            {error && <div className={`error ${isVisible ? 'show' : 'hide'}`}>{error}</div>}
+            {success && <div className={`success ${isVisible ? 'show' : 'hide'}`}>{success}</div>}
             <h2>Czas pracy</h2>
             <div>
                 <label>Data: </label>
-                <input
-                    type="date"
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
-                />
+                <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
             </div>
             <div>
                 <label>Godzina rozpoczęcia: </label>
-                <input
-                    type="time"
-                    value={startTime}
-                    onChange={(e) => setStartTime(e.target.value)}
-                />
+                <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
             </div>
             <div>
                 <label>Godzina zakończenia: </label>
-                <input
-                    type="time"
-                    value={endTime}
-                    onChange={(e) => setEndTime(e.target.value)}
-                />
+                <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} />
             </div>
             <div className="buttons">
                 <button onClick={() => saveWorkTime(null)}>Zapisz</button>
                 <button onClick={exportToExcel}>Eksportuj do Excela</button>
+            </div>
+            <div>
+                <label>Wybierz rok:</label>
+                <select onChange={(e) => setSelectedYear(parseInt(e.target.value))} value={selectedYear}>
+                    {Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i).map(year => (
+                        <option key={year} value={year}>{year}</option>
+                    ))}
+                </select>
             </div>
             <div>
                 <label>Wybierz miesiąc:</label>
@@ -215,7 +235,7 @@ const TimeTracker = () => {
                     ))}
                 </select>
             </div>
-            <h3>Historia pracy ({new Date(0, selectedMonth).toLocaleString('pl-PL', { month: 'long' })}):</h3>
+            <h3>Historia pracy ({new Date(0, selectedMonth).toLocaleString('pl-PL', { month: 'long' })} {selectedYear}):</h3>
             <table className="history-table">
                 <thead>
                     <tr>
@@ -236,25 +256,13 @@ const TimeTracker = () => {
                                 <td>{formattedDate}<br /><small>({new Date(entry.date).toLocaleString('pl-PL', { weekday: 'long' })})</small></td>
                                 <td>
                                     {isEditing ? (
-                                        <input
-                                            type="time"
-                                            value={entry.startTime}
-                                            onChange={(e) => handleInputChange(e, 'startTime', entry)}
-                                        />
-                                    ) : (
-                                        entry.startTime
-                                    )}
+                                        <input type="time" value={entry.startTime} onChange={(e) => handleInputChange(e, 'startTime', entry)} />
+                                    ) : entry.startTime}
                                 </td>
                                 <td>
                                     {isEditing ? (
-                                        <input
-                                            type="time"
-                                            value={entry.endTime}
-                                            onChange={(e) => handleInputChange(e, 'endTime', entry)}
-                                        />
-                                    ) : (
-                                        entry.endTime
-                                    )}
+                                        <input type="time" value={entry.endTime} onChange={(e) => handleInputChange(e, 'endTime', entry)} />
+                                    ) : entry.endTime}
                                 </td>
                                 <td>{entry.total}</td>
                                 <td className="actions">

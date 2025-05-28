@@ -1,0 +1,113 @@
+/* Reset i fonty */
+body {
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  background-color: #f5f7fa;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+/* Layout */
+.container {
+  padding: 20px;
+}
+
+.container.with-ui {
+  margin-left: 220px;
+  margin-top: 70px;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background-color: #1c2a59;
+  color: white;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding-top: 70px;
+  /* pod TopBar */
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar ul li a {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+  display: block;
+  padding: 15px 20px;
+  transition: background 0.2s;
+}
+
+.sidebar ul li a:hover {
+  background-color: #2e3f72;
+}
+
+.sidebar ul li a.nav-item {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+  display: block;
+  padding: 15px 20px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.sidebar ul li a.nav-item:hover {
+  background-color: #2e3f72;
+}
+
+.sidebar ul li a.nav-item.active {
+  background-color: #ffffff;
+  color: #1c2a59;
+  font-weight: bold;
+  border-left: 5px solid #4ca1af;
+}
+
+/* Ogólne */
+h2 {
+  font-size: 24px;
+  color: #1c2a59;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #d0d4e4;
+  padding-bottom: 8px;
+}
+
+/* Buttons */
+button {
+  background-color: #1c2a59;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+button:hover {
+  background-color: #2e3f72;
+}
+
+/* Edit/Delete buttons */
+.editButton {
+  background-color: #f0ad4e;
+}
+
+.editButton:hover {
+  background-color: #ec971f;
+}
+
+.deleteButton {
+  background-color: #d9534f;
+}
+
+.deleteButton:hover {
+  background-color: #c9302c;
+}
