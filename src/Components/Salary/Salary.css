@@ -1,0 +1,74 @@
+.salary-page {
+    padding: 30px;
+}
+
+.profile-box,
+.generate-box,
+.history-box {
+    background: #fff;
+    padding: 20px;
+    margin-bottom: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.profile-box p,
+.generate-box p {
+    margin: 0 0 10px;
+}
+
+.generate-box label {
+    display: block;
+    margin: 10px 0;
+}
+
+button {
+    padding: 10px 20px;
+    background: #1c2a59;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #2e3f72;
+}
+
+.status-msg {
+    margin-top: 10px;
+    color: green;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+}
+
+input[type="text"],
+input[type="number"] {
+    width: 100px;
+}
+
+input[type="checkbox"] {
+    transform: scale(1.2);
+}
+
+.status-msg-inline {
+    display: inline-block;
+    margin-left: 15px;
+    color: #3b863b;
+}
+
+.update-message-box {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    height: 18px;
+}
