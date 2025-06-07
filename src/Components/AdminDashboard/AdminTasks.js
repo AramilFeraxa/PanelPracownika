@@ -23,10 +23,10 @@ const AdminTasks = () => {
         });
         const data = await res.json();
         setUsers(data);
-        setSelectedUserId(data.length > 0 ? data[0].id : null);
     };
 
     const fetchTasks = async () => {
+        if (!selectedUserId) return;
         const res = await fetch(`https://panel-pracownika-api.onrender.com/api/Admin/tasks/${selectedUserId}`, {
             headers: { Authorization: `Bearer ${token}` }
         });
@@ -71,9 +71,12 @@ const AdminTasks = () => {
             <h2>Zadania użytkowników</h2>
 
             <label>Wybierz użytkownika:
-                <select value={selectedUserId || ''} onChange={e => setSelectedUserId(parseInt(e.target.value))}>
-                    {users.map(u => (
-                        <option key={u.id} value={u.id}>{u.name} {u.surname}</option>
+                <select value={selectedUserId} onChange={e => setSelectedUserId(e.target.value)}>
+                    <option value="">-- wybierz --</option>
+                    {users.map(user => (
+                        <option key={user.id} value={user.id}>
+                            {user.name} {user.surname}
+                        </option>
                     ))}
                 </select>
             </label>

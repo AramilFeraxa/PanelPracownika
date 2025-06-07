@@ -31,6 +31,11 @@ const Dashboard = () => {
                             <h3>Zarządzaj wynagrodzeniami</h3>
                             <p>Przeglądaj i zarządzaj wynagrodzeniami pracowników.</p>
                         </div>
+                        <div className="card" onClick={() => navigate('/admin/czas-pracy')}>
+                            <FaClock className="icon" />
+                            <h3>Zarządzaj czasem pracy</h3>
+                            <p>Przeglądaj czas pracy pracowników.</p>
+                        </div>
                     </>
                 ) : (
                     <>

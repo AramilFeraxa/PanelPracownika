@@ -16,6 +16,7 @@ import Salary from '../Salary/SalaryPage';
 import AdminUsers from '../AdminDashboard/AdminUsers';
 import AdminSalary from '../AdminDashboard/AdminSalary';
 import AdminTasks from '../AdminDashboard/AdminTasks';
+import AdminWorkTime from '../AdminDashboard/AdminWorkTime';
 
 const App = () => {
   const { token } = useAuth();
@@ -58,6 +59,7 @@ const App = () => {
             <Route path="/admin/uzytkownicy" element={token ? <AdminUsers /> : <Navigate to="/" />} />
             <Route path="/admin/wynagrodzenia" element={token ? <AdminSalary /> : <Navigate to="/" />} />
             <Route path="/admin/zadania" element={token ? <AdminTasks /> : <Navigate to="/" />} />
+            <Route path="/admin/czas-pracy" element={token ? <AdminWorkTime /> : <Navigate to="/" />} />
 
           </Routes>
         </div>

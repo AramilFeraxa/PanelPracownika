@@ -34,6 +34,15 @@ button {
   transition: background 0.2s;
 }
 
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+button:disabled:hover {
+  background-color: #ccc;
+}
+
 button:hover {
   background-color: #2e3f72;
 }
@@ -88,6 +97,15 @@ input[type="number"] {
 
 input[type="checkbox"] {
   transform: scale(1.2);
+  margin-left: 10px;
+}
+
+input[type="month"],
+input[type="date"] {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 150px;
   margin-left: 10px;
 }
 

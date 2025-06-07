@@ -51,6 +51,11 @@ const Navbar = () => {
                                 <FaCoins /> Zarządzaj wynagrodzeniami
                             </NavLink>
                         </li>
+                        <li>
+                            <NavLink to="/admin/czas-pracy" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                                <FaClock /> Przeglądaj czas pracy
+                            </NavLink>
+                        </li>
                     </>
                 ) : (<>
                     <li>
