@@ -9,11 +9,12 @@ const CalendarPage = () => {
     const [selectedDate, setSelectedDate] = useState(null);
     const [error, setError] = useState('');
     const { token } = useAuth();
+    const [mode, setMode] = useState("Delegacja");
 
     useEffect(() => {
         if (!token) return;
 
-        fetch('https://localhost:7289/api/Delegations', {
+        fetch('https://panel-pracownika-api.onrender.com/api/Absence', {
             headers: { Authorization: `Bearer ${token}` }
         })
             .then(res => {
@@ -35,57 +36,59 @@ const CalendarPage = () => {
         const dateString = date.toLocaleDateString('sv-SE');
         setSelectedDate(dateString);
 
-        try {
-            if (delegations.includes(dateString)) {
-                const resp = await fetch(`https://localhost:7289/api/Delegations/${dateString}`, {
-                    method: 'DELETE',
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+        const existing = delegations.find(d => d.date === dateString);
 
-                if (!resp.ok) {
-                    setError("Błąd podczas usuwania delegacji.");
-                    return;
-                }
+        if (existing) {
+            const resp = await fetch(`https://panel-pracownika-api.onrender.com/api/Absence/${dateString}`, {
+                method: 'DELETE',
+                headers: { Authorization: `Bearer ${token}` }
+            });
 
-                setDelegations(delegations.filter(d => d !== dateString));
+            if (resp.ok) {
+                setDelegations(delegations.filter(d => d.date !== dateString));
             } else {
-                const response = await fetch(`https://localhost:7289/api/Delegations`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${token}`
-                    },
-                    body: JSON.stringify({ date: new Date(dateString) })
-                });
-
-                if (!response.ok) {
-                    const text = await response.text();
-                    if (response.status === 409) {
-                        setError("Nie można dodać delegacji – istnieją już godziny pracy.");
-                    } else {
-                        setError("Błąd dodawania delegacji.");
-                    }
-                    console.error("API error:", text);
-                    return;
-                }
-
-                setDelegations([...delegations, dateString]);
+                setError("Błąd usuwania.");
             }
-        } catch (error) {
-            console.error("Błąd połączenia z API:", error);
-            setError("Błąd połączenia z serwerem.");
+
+            return;
+        }
+
+        const response = await fetch(`https://panel-pracownika-api.onrender.com/api/Absence`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({ date: new Date(dateString), type: mode })
+        });
+
+        if (response.ok) {
+            setDelegations([...delegations, { date: dateString, type: mode }]);
+        } else {
+            const text = await response.text();
+            setError(text || "Błąd dodawania.");
         }
     };
 
+
     const tileClassName = ({ date }) => {
         const dateStr = date.toLocaleDateString('sv-SE');
-        return delegations.includes(dateStr) ? 'delegation-day' : null;
+        const entry = delegations.find(d => d.date === dateStr);
+
+        if (entry?.type === "Delegacja") return "delegation-day";
+        if (entry?.type === "Urlop") return "vacation-day";
+        return null;
     };
+
 
     return (
         <div className="calendar-container">
-            <h2>Kalendarz delegacji</h2>
+            <h2>Kalendarz nieobecności</h2>
             {error && <div className="calendar-error">{error}</div>}
+            <div className="calendar-mode">
+                <button onClick={() => setMode("Delegacja")} className={mode === "Delegacja" ? '' : 'inactive'}>Delegacja</button>
+                <button onClick={() => setMode("Urlop")} className={mode === "Urlop" ? '' : 'inactive'}>Urlop</button>
+            </div>
             <Calendar
                 onClickDay={handleDayClick}
                 tileClassName={tileClassName}

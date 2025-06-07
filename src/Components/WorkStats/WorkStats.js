@@ -11,7 +11,7 @@ const WorkStats = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const resp = await fetch('https://localhost:7289/api/WorkTime', {
+            const resp = await fetch('https://panel-pracownika-api.onrender.com/api/WorkTime', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

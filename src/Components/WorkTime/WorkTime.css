@@ -7,6 +7,10 @@
     font-family: 'Inter', sans-serif;
 }
 
+.time-tracker h2 {
+    border-bottom: 2px solid #99a9f0;
+}
+
 .time-tracker h2,
 .time-tracker h3 {
     color: #1c2a59;

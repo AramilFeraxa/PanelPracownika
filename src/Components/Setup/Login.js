@@ -16,7 +16,7 @@ const Login = () => {
         setIsLoading(true);
 
         try {
-            const response = await fetch('https://localhost:7289/api/User/login', {
+            const response = await fetch('https://panel-pracownika-api.onrender.com/api/User/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -26,7 +26,7 @@ const Login = () => {
 
             if (response.ok) {
                 const result = await response.json();
-                login(result.token);
+                login(result);
                 navigate('/');
             } else {
                 setError('Błędna nazwa użytkownika lub hasło.');

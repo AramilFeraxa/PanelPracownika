@@ -29,7 +29,7 @@ const SalaryHistory = ({
             <div className="update-message-box">
                 {updateMessage && <span className="status-msg-inline">{updateMessage}</span>}
             </div>
-            <table>
+            <table className="salary-history-table">
                 <thead>
                     <tr>
                         <th>Rok</th>

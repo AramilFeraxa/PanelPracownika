@@ -6,11 +6,14 @@
     margin-bottom: 40px;
 }
 
+.todo-list h2 {
+    border-bottom: 2px solid #99a9f0;
+}
+
 .todo-list h2,
 .todo-list h3 {
     margin-bottom: 20px;
     color: #1c2a59;
-    border-bottom: 2px solid #99a9f0;
     padding-bottom: 6px;
 }
 

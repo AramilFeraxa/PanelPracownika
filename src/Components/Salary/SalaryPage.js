@@ -22,7 +22,7 @@ const SalaryPage = () => {
     }, [token]);
 
     const fetchProfile = async () => {
-        const res = await fetch('https://localhost:7289/api/Salary/profile', {
+        const res = await fetch('https://panel-pracownika-api.onrender.com/api/Salary/profile', {
             headers: { Authorization: `Bearer ${token}` }
         });
         const data = await res.json();
@@ -30,7 +30,7 @@ const SalaryPage = () => {
     };
 
     const fetchHistory = async () => {
-        const res = await fetch('https://localhost:7289/api/Salary/history', {
+        const res = await fetch('https://panel-pracownika-api.onrender.com/api/Salary/history', {
             headers: { Authorization: `Bearer ${token}` }
         });
         const data = await res.json();
@@ -40,7 +40,7 @@ const SalaryPage = () => {
 
     const generateSalary = async () => {
         setMessage('');
-        const res = await fetch('https://localhost:7289/api/Salary/generate', {
+        const res = await fetch('https://panel-pracownika-api.onrender.com/api/Salary/generate', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -63,7 +63,7 @@ const SalaryPage = () => {
         const record = editedHistory.find(h => h.id === id);
         if (!record) return;
 
-        const res = await fetch(`https://localhost:7289/api/Salary/update/${id}`, {
+        const res = await fetch(`https://panel-pracownika-api.onrender.com/api/Salary/update/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

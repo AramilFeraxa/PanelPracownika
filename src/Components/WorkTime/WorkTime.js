@@ -18,7 +18,7 @@ const TimeTracker = () => {
 
     const fetchWorkHistory = async () => {
         try {
-            const resp = await fetch('https://localhost:7289/api/WorkTime', {
+            const resp = await fetch('https://panel-pracownika-api.onrender.com/api/WorkTime', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -74,7 +74,7 @@ const TimeTracker = () => {
     }, [error, success]);
 
     const deleteWorkTime = async (entry) => {
-        await fetch(`https://localhost:7289/api/WorkTime/${entry.id}`, {
+        await fetch(`https://panel-pracownika-api.onrender.com/api/WorkTime/${entry.id}`, {
             method: 'DELETE',
             headers: {
                 Authorization: `Bearer ${token}`
@@ -98,7 +98,7 @@ const TimeTracker = () => {
 
         let response;
         if (entry) {
-            response = await fetch(`https://localhost:7289/api/WorkTime/${entry.id}`, {
+            response = await fetch(`https://panel-pracownika-api.onrender.com/api/WorkTime/${entry.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -114,7 +114,7 @@ const TimeTracker = () => {
             }
             console.log('requestBody', requestBody);
 
-            response = await fetch('https://localhost:7289/api/WorkTime', {
+            response = await fetch('https://panel-pracownika-api.onrender.com/api/WorkTime', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -12,6 +12,7 @@
     margin-bottom: 20px;
     color: #1c2a59;
     text-align: center;
+    border-bottom: 2px solid #99a9f0;
 }
 
 .react-calendar {
@@ -52,6 +53,25 @@
 .react-calendar__tile:enabled:hover {
     background-color: #e0e7ff;
     cursor: pointer;
+}
+
+.calendar-mode {
+    margin-bottom: 10px;
+    text-align: center;
+    gap: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.calendar-mode .inactive {
+    background: #e0e7ff;
+    color: white;
+}
+
+.vacation-day {
+    background-color: #e67e22 !important;
+    color: white !important;
 }
 
 .delegation-day {

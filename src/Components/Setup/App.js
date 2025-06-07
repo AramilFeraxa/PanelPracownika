@@ -12,6 +12,10 @@ import WorkStats from '../WorkStats/WorkStats';
 import Settings from '../Navigation/Settings';
 import { useAuth } from '../../context/AuthContext';
 import CalendarPage from '../Calendar/Calendar';
+import Salary from '../Salary/SalaryPage';
+import AdminUsers from '../AdminDashboard/AdminUsers';
+import AdminSalary from '../AdminDashboard/AdminSalary';
+import AdminTasks from '../AdminDashboard/AdminTasks';
 
 const App = () => {
   const { token } = useAuth();
@@ -22,7 +26,7 @@ const App = () => {
 
     const fetchTasks = async () => {
       try {
-        const response = await fetch('https://localhost:7289/api/Tasks', {
+        const response = await fetch('https://panel-pracownika-api.onrender.com/api/Tasks', {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -49,7 +53,12 @@ const App = () => {
             <Route path="/todo" element={token ? <TodoList taski={tasks} /> : <Navigate to="/" />} />
             <Route path="/statystyki" element={token ? <WorkStats /> : <Navigate to="/" />} />
             <Route path="/ustawienia" element={token ? <Settings /> : <Navigate to="/" />} />
-            <Route path="/delegacje" element={<CalendarPage />} />
+            <Route path="/wynagrodzenie" element={token ? <Salary /> : <Navigate to="/" />} />
+            <Route path="/kalendarz" element={token ? <CalendarPage /> : <Navigate to="/" />} />
+            <Route path="/admin/uzytkownicy" element={token ? <AdminUsers /> : <Navigate to="/" />} />
+            <Route path="/admin/wynagrodzenia" element={token ? <AdminSalary /> : <Navigate to="/" />} />
+            <Route path="/admin/zadania" element={token ? <AdminTasks /> : <Navigate to="/" />} />
+
           </Routes>
         </div>
       </div>

@@ -4,13 +4,19 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(localStorage.getItem('token'));
+    const [user, setUser] = useState(() => {
+        const stored = localStorage.getItem('user');
+        return stored ? JSON.parse(stored) : null;
+    });
 
     const INACTIVITY_LIMIT = 30 * 60 * 1000;
     let inactivityTimer = null;
 
     const logout = useCallback(() => {
         setToken(null);
+        setUser(null);
         localStorage.removeItem('token');
+        localStorage.removeItem('user');
         window.location.href = '/';
     }, []);
 
@@ -37,13 +43,15 @@ export const AuthProvider = ({ children }) => {
         };
     }, [token, resetInactivityTimer]);
 
-    const login = (newToken) => {
+    const login = ({ token: newToken, user: userInfo }) => {
         setToken(newToken);
+        setUser(userInfo);
         localStorage.setItem('token', newToken);
+        localStorage.setItem('user', JSON.stringify(userInfo));
     };
 
     return (
-        <AuthContext.Provider value={{ token, login, logout }}>
+        <AuthContext.Provider value={{ token, user, login, logout }}>
             {children}
         </AuthContext.Provider>
     );

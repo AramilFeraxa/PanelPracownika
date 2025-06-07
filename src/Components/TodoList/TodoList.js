@@ -22,7 +22,7 @@ const TodoList = ({ taski }) => {
             completed: false,
         };
 
-        const response = await fetch('https://localhost:7289/api/tasks', {
+        const response = await fetch('https://panel-pracownika-api.onrender.com/api/tasks', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -46,7 +46,7 @@ const TodoList = ({ taski }) => {
 
         const taskToUpdate = updatedTasks.find((t) => t.id === taskId);
 
-        const response = await fetch(`https://localhost:7289/api/tasks/${taskId}`, {
+        const response = await fetch(`https://panel-pracownika-api.onrender.com/api/tasks/${taskId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -67,7 +67,7 @@ const TodoList = ({ taski }) => {
     };
 
     const deleteTask = async (taskId) => {
-        await fetch(`https://localhost:7289/api/tasks/${taskId}`, {
+        await fetch(`https://panel-pracownika-api.onrender.com/api/tasks/${taskId}`, {
             method: 'DELETE',
             headers: {
                 Authorization: `Bearer ${token}`,

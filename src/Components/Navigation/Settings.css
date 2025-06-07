@@ -16,12 +16,7 @@
     margin-bottom: 5px;
 }
 
-.settings-page input {
-    width: 97%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
+
 
 .settings-page .success {
     color: green;

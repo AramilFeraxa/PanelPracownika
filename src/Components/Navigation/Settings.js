@@ -9,7 +9,7 @@ const Settings = () => {
 
     useEffect(() => {
         const fetchProfile = async () => {
-            const response = await fetch('https://localhost:7289/api/User/profile', {
+            const response = await fetch('https://panel-pracownika-api.onrender.com/api/User/profile', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -31,7 +31,7 @@ const Settings = () => {
     };
 
     const handleSave = async () => {
-        const response = await fetch('https://localhost:7289/api/User/profile', {
+        const response = await fetch('https://panel-pracownika-api.onrender.com/api/User/profile', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -52,11 +52,11 @@ const Settings = () => {
             <h2>Ustawienia użytkownika</h2>
             <div className="form-group">
                 <label>Imię</label>
-                <input name="name" value={formData.name} onChange={handleChange} />
+                <input name="name" type="text" value={formData.name} onChange={handleChange} />
             </div>
             <div className="form-group">
                 <label>Nazwisko</label>
-                <input name="surname" value={formData.surname} onChange={handleChange} />
+                <input name="surname" type="text" value={formData.surname} onChange={handleChange} />
             </div>
             <div className="form-group">
                 <label>Nowe hasło</label>
