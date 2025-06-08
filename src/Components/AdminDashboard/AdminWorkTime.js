@@ -112,30 +112,32 @@ const AdminWorkTime = () => {
 
             {message && <p className="status-msg">{message}</p>}
             {workTimes.length > 0 && (
-                <table className="history-table">
-                    <thead>
-                        <tr>
-                            <th>Data</th>
-                            <th>Od</th>
-                            <th>Do</th>
-                            <th>Łącznie</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {workTimes.map((entry, index) => (
-                            <tr key={index} className={entry.total === 0 ? 'empty' : ''}>
-                                <td>{formatDate(entry.date)}</td>
-                                <td>{entry.startTime}</td>
-                                <td>{entry.endTime}</td>
-                                <td>{entry.total ? entry.total.toFixed(2) : '0'}</td>
+                <div className="table-wrapper">
+                    <table className="history-table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Od</th>
+                                <th>Do</th>
+                                <th>Łącznie</th>
                             </tr>
-                        ))}
-                        <tr>
-                            <td colSpan="3">Suma godzin:</td>
-                            <td>{calculateTotalHours()}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {workTimes.map((entry, index) => (
+                                <tr key={index} className={entry.total === 0 ? 'empty' : ''}>
+                                    <td>{formatDate(entry.date)}</td>
+                                    <td>{entry.startTime}</td>
+                                    <td>{entry.endTime}</td>
+                                    <td>{entry.total ? entry.total.toFixed(2) : '0'}</td>
+                                </tr>
+                            ))}
+                            <tr>
+                                <td colSpan="3">Suma godzin:</td>
+                                <td>{calculateTotalHours()}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             )}
 
             {workTimes.length === 0 && !loading && loaded && (

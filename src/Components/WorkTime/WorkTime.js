@@ -236,52 +236,54 @@ const TimeTracker = () => {
                 </select>
             </div>
             <h3>Historia pracy ({new Date(0, selectedMonth).toLocaleString('pl-PL', { month: 'long' })} {selectedYear}):</h3>
-            <table className="history-table">
-                <thead>
-                    <tr>
-                        <th>Data</th>
-                        <th>Czas rozpoczęcia</th>
-                        <th>Czas zakończenia</th>
-                        <th>Godziny pracy</th>
-                        <th>Akcja</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {entriesToShow.slice().reverse().map((entry) => {
-                        const isEditing = editingEntry === entry.id;
-                        const formattedDate = new Date(entry.date).toLocaleDateString('en-CA');
+            <div className="table-wrapper">
+                <table className="history-table">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Czas rozpoczęcia</th>
+                            <th>Czas zakończenia</th>
+                            <th>Godziny pracy</th>
+                            <th>Akcja</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {entriesToShow.slice().reverse().map((entry) => {
+                            const isEditing = editingEntry === entry.id;
+                            const formattedDate = new Date(entry.date).toLocaleDateString('en-CA');
 
-                        return (
-                            <tr key={entry.id} className={entry.total === 0 ? 'empty' : ''}>
-                                <td>{formattedDate}<br /><small>({new Date(entry.date).toLocaleString('pl-PL', { weekday: 'long' })})</small></td>
-                                <td>
-                                    {isEditing ? (
-                                        <input type="time" value={entry.startTime} onChange={(e) => handleInputChange(e, 'startTime', entry)} />
-                                    ) : entry.startTime}
-                                </td>
-                                <td>
-                                    {isEditing ? (
-                                        <input type="time" value={entry.endTime} onChange={(e) => handleInputChange(e, 'endTime', entry)} />
-                                    ) : entry.endTime}
-                                </td>
-                                <td>{entry.total}</td>
-                                <td className="actions">
-                                    {isEditing ? (
-                                        <button className="editButton" onClick={() => saveWorkTime(entry)}>Zapisz</button>
-                                    ) : (
-                                        <button className="editButton" onClick={() => editWorkTime(entry)}>Edytuj</button>
-                                    )}
-                                    <button className="deleteButton" onClick={() => deleteWorkTime(entry)}>Usuń</button>
-                                </td>
-                            </tr>
-                        );
-                    })}
-                    <tr>
-                        <td colSpan="3">Suma godzin:</td>
-                        <td>{calculateTotalHours()}</td>
-                    </tr>
-                </tbody>
-            </table>
+                            return (
+                                <tr key={entry.id} className={entry.total === 0 ? 'empty' : ''}>
+                                    <td>{formattedDate}<br /><small>({new Date(entry.date).toLocaleString('pl-PL', { weekday: 'long' })})</small></td>
+                                    <td>
+                                        {isEditing ? (
+                                            <input type="time" value={entry.startTime} onChange={(e) => handleInputChange(e, 'startTime', entry)} />
+                                        ) : entry.startTime}
+                                    </td>
+                                    <td>
+                                        {isEditing ? (
+                                            <input type="time" value={entry.endTime} onChange={(e) => handleInputChange(e, 'endTime', entry)} />
+                                        ) : entry.endTime}
+                                    </td>
+                                    <td>{entry.total}</td>
+                                    <td className="actions">
+                                        {isEditing ? (
+                                            <button className="editButton" onClick={() => saveWorkTime(entry)}>Zapisz</button>
+                                        ) : (
+                                            <button className="editButton" onClick={() => editWorkTime(entry)}>Edytuj</button>
+                                        )}
+                                        <button className="deleteButton" onClick={() => deleteWorkTime(entry)}>Usuń</button>
+                                    </td>
+                                </tr>
+                            );
+                        })}
+                        <tr>
+                            <td colSpan="3">Suma godzin:</td>
+                            <td>{calculateTotalHours()}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 };

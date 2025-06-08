@@ -143,32 +143,34 @@ const AdminUsers = () => {
                 </div>
             </div>
 
-            <h3>Lista użytkowników</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Login</th>
-                        <th>Imię</th>
-                        <th>Nazwisko</th>
-                        <th>Admin</th>
-                        <th>Akcje</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {users.map(user => (
-                        <tr key={user.id}>
-                            <td>{user.username}</td>
-                            <td>{user.name}</td>
-                            <td>{user.surname}</td>
-                            <td>{user.isAdmin ? '✓' : ''}</td>
-                            <td>
-                                <button className="editButton" onClick={() => startEditingUser(user)}>Edytuj</button>
-                                <button className="deleteButton" onClick={() => handleDeleteUser(user.id)}>Usuń</button>
-                            </td>
+            <div className="table-wrapper">
+                <h3>Lista użytkowników</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Login</th>
+                            <th>Imię</th>
+                            <th>Nazwisko</th>
+                            <th>Admin</th>
+                            <th>Akcje</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {users.map(user => (
+                            <tr key={user.id}>
+                                <td>{user.username}</td>
+                                <td>{user.name}</td>
+                                <td>{user.surname}</td>
+                                <td>{user.isAdmin ? '✓' : ''}</td>
+                                <td>
+                                    <button className="editButton" onClick={() => startEditingUser(user)}>Edytuj</button>
+                                    <button className="deleteButton" onClick={() => handleDeleteUser(user.id)}>Usuń</button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
 
             <Modal isOpen={!!editingUser} onClose={() => setEditingUser(null)}>
                 <h4 className="editing-h4">Edycja użytkownika: {editingUser?.username}</h4>

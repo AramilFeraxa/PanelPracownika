@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './TopBar.css';
-import { FaBell, FaTimes, FaHome } from 'react-icons/fa';
+import { FaBell, FaTimes, FaHome, FaBars } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
-const TopBar = ({ tasks }) => {
+const TopBar = ({ tasks, onToggleSidebar }) => {
     const [showNotifications, setShowNotifications] = useState(false);
     const [upcomingTasks, setUpcomingTasks] = useState([]);
     const navigate = useNavigate();
@@ -29,9 +29,14 @@ const TopBar = ({ tasks }) => {
 
     return (
         <div className="top-bar">
-            <button className="mainpage-button" onClick={() => navigate('/')}>
-                <FaHome />
-            </button>
+            <div className="topbar-actions">
+                <button className="sidebar-toggle" onClick={onToggleSidebar}>
+                    <FaBars />
+                </button>
+                <button className="mainpage-button" onClick={() => navigate('/')}>
+                    <FaHome />
+                </button>
+            </div>
             <h1>Panel Pracownika</h1>
 
             <div className="topbar-actions">

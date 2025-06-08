@@ -7,12 +7,21 @@ body {
 }
 
 .container {
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
 
-.container.with-ui {
-  margin-left: 220px;
-  margin-top: 70px;
+.content-area {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+}
+
+.content {
+  flex: 1;
+  margin: 20px;
+  box-sizing: border-box;
 }
 
 h2 {
@@ -63,11 +72,17 @@ button:hover {
   background-color: #c9302c;
 }
 
+.table-wrapper {
+  overflow-x: auto;
+  width: 100%;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 25px;
   font-size: 14px;
+  min-width: 600px;
 }
 
 th,
@@ -125,4 +140,50 @@ select {
 
 .deleteButton:hover {
   background-color: #c0392b;
+}
+
+.sidebar-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .sidebar-toggle {
+    display: block;
+    padding: 0;
+  }
+
+  .sidebar {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 220px;
+    height: calc(100% - 60px);
+    background-color: #1c2a59;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 999;
+  }
+
+  .sidebar.visible {
+    transform: translateX(0);
+  }
+
+  .sidebar.hidden {
+    transform: translateX(-100%);
+  }
+
+  .content {
+    padding: 20px;
+    margin: 0;
+    flex: 1;
+  }
+
+  .content-area {
+    flex-direction: column;
+  }
 }

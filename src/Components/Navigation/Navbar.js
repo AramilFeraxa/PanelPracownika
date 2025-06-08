@@ -4,7 +4,7 @@ import { FaClock, FaClipboardList, FaChartBar, FaUserCircle, FaCog, FaCalendarAl
 import { useAuth } from "../../context/AuthContext";
 import './Navbar.css';
 
-const Navbar = () => {
+const Navbar = ({ visible, onLinkClick }) => {
     const { token } = useAuth();
     const [profile, setProfile] = useState({ name: '', surname: '' });
     const { user } = useAuth();
@@ -27,7 +27,7 @@ const Navbar = () => {
     }, [token]);
 
     return (
-        <nav className="sidebar">
+        <nav className={`sidebar ${visible ? 'visible' : 'hidden'}`}>
             <div className="user-profile">
                 <FaUserCircle size={48} />
                 <div className="user-name">{profile.name} {profile.surname}</div>
@@ -37,56 +37,56 @@ const Navbar = () => {
                 {user?.isAdmin ? (
                     <>
                         <li>
-                            <NavLink to="/admin/uzytkownicy" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                            <NavLink to="/admin/uzytkownicy" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'} onClick={onLinkClick}>
                                 <FaUserCircle /> Zarządzaj użytkownikami
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to="/admin/zadania" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                            <NavLink to="/admin/zadania" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'} onClick={onLinkClick}>
                                 <FaClipboardList /> Zarządzaj zadaniami
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to="/admin/wynagrodzenia" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                            <NavLink to="/admin/wynagrodzenia" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'} onClick={onLinkClick}>
                                 <FaCoins /> Zarządzaj wynagrodzeniami
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to="/admin/czas-pracy" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                            <NavLink to="/admin/czas-pracy" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'} onClick={onLinkClick}>
                                 <FaClock /> Przeglądaj czas pracy
                             </NavLink>
                         </li>
                     </>
                 ) : (<>
                     <li>
-                        <NavLink to="/czas-pracy" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                        <NavLink to="/czas-pracy" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'} onClick={onLinkClick}>
                             <FaClock /> Czas pracy
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink to="/todo" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                        <NavLink to="/todo" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'} onClick={onLinkClick}>
                             <FaClipboardList /> Lista zadań
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink to="/statystyki" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                        <NavLink to="/statystyki" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'} onClick={onLinkClick}>
                             <FaChartBar /> Statystyki
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink to="/kalendarz" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                        <NavLink to="/kalendarz" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'} onClick={onLinkClick}>
                             <FaCalendarAlt /> Kalendarz
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink to="/wynagrodzenie" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                        <NavLink to="/wynagrodzenie" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'} onClick={onLinkClick}>
                             <FaCoins /> Wynagrodzenie
                         </NavLink>
                     </li>
                 </>)}
                 <li><br /></li>
                 <li className="bottom-link">
-                    <NavLink to="/ustawienia" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+                    <NavLink to="/ustawienia" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'} onClick={onLinkClick}>
                         <FaCog /> Ustawienia
                     </NavLink>
                 </li>
