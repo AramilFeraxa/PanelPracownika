@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import { FaClock, FaClipboardList } from 'react-icons/fa';
+import React, { useEffect, useState, useMemo } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import TimeTracker from '../WorkTime/WorkTime';
 import TodoList from '../TodoList/TodoList';
 import Login from './Login';
@@ -21,19 +20,14 @@ import AdminWorkTime from '../AdminDashboard/AdminWorkTime';
 const App = () => {
   const { token } = useAuth();
   const [tasks, setTasks] = useState([]);
-  const [sidebarVisible, setSidebarVisible] = useState(true);
+  const [sidebarVisible, setSidebarVisible] = useState(window.innerWidth >= 768);
 
-  const toggleSidebar = () => {
-    setSidebarVisible(prev => !prev);
-  };
+  const toggleSidebar = () => setSidebarVisible(prev => !prev);
+
   useEffect(() => {
-    const handleResize = () => {
-      setSidebarVisible(window.innerWidth >= 768);
-    };
+    const handleResize = () => setSidebarVisible(window.innerWidth >= 768);
 
-    handleResize();
     window.addEventListener('resize', handleResize);
-
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
@@ -43,9 +37,7 @@ const App = () => {
     const fetchTasks = async () => {
       try {
         const response = await fetch('https://panel-pracownika-api.onrender.com/api/Tasks', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+          headers: { Authorization: `Bearer ${token}` }
         });
         const data = await response.json();
         setTasks(data);
@@ -57,28 +49,32 @@ const App = () => {
     fetchTasks();
   }, [token]);
 
+  const handleNavLinkClick = () => {
+    if (window.innerWidth < 768) setSidebarVisible(false);
+  };
+
+  const protectedRoute = (Component) => token ? <Component /> : <Login />;
+  const protectedTaskRoute = () => token ? <TodoList taski={tasks} /> : <Login />;
+
   return (
     <Router>
       <div className="container">
         {token && <TopBar tasks={tasks} onToggleSidebar={toggleSidebar} />}
         <div className="content-area">
-          {token && <Navbar visible={sidebarVisible} onLinkClick={() => {
-            if (window.innerWidth < 768) setSidebarVisible(false);
-          }} />}
-          <div className={token && "content"}>
+          {token && <Navbar visible={sidebarVisible} onLinkClick={handleNavLinkClick} />}
+          <div className={token ? "content" : ""}>
             <Routes>
-              <Route path="/" element={token ? <Dashboard /> : <Login />} />
-              <Route path="/czas-pracy" element={token ? <TimeTracker /> : <Navigate to="/" />} />
-              <Route path="/todo" element={token ? <TodoList taski={tasks} /> : <Navigate to="/" />} />
-              <Route path="/statystyki" element={token ? <WorkStats /> : <Navigate to="/" />} />
-              <Route path="/ustawienia" element={token ? <Settings /> : <Navigate to="/" />} />
-              <Route path="/wynagrodzenie" element={token ? <Salary /> : <Navigate to="/" />} />
-              <Route path="/kalendarz" element={token ? <CalendarPage /> : <Navigate to="/" />} />
-              <Route path="/admin/uzytkownicy" element={token ? <AdminUsers /> : <Navigate to="/" />} />
-              <Route path="/admin/wynagrodzenia" element={token ? <AdminSalary /> : <Navigate to="/" />} />
-              <Route path="/admin/zadania" element={token ? <AdminTasks /> : <Navigate to="/" />} />
-              <Route path="/admin/czas-pracy" element={token ? <AdminWorkTime /> : <Navigate to="/" />} />
-
+              <Route path="/" element={protectedRoute(Dashboard)} />
+              <Route path="/czas-pracy" element={protectedRoute(TimeTracker)} />
+              <Route path="/todo" element={protectedTaskRoute()} />
+              <Route path="/statystyki" element={protectedRoute(WorkStats)} />
+              <Route path="/ustawienia" element={protectedRoute(Settings)} />
+              <Route path="/wynagrodzenie" element={protectedRoute(Salary)} />
+              <Route path="/kalendarz" element={protectedRoute(CalendarPage)} />
+              <Route path="/admin/uzytkownicy" element={protectedRoute(AdminUsers)} />
+              <Route path="/admin/wynagrodzenia" element={protectedRoute(AdminSalary)} />
+              <Route path="/admin/zadania" element={protectedRoute(AdminTasks)} />
+              <Route path="/admin/czas-pracy" element={protectedRoute(AdminWorkTime)} />
             </Routes>
           </div>
         </div>

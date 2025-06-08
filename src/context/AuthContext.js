@@ -43,6 +43,23 @@ export const AuthProvider = ({ children }) => {
         };
     }, [token, resetInactivityTimer]);
 
+    useEffect(() => {
+        const validateToken = async () => {
+            if (!token) return;
+
+            try {
+                const res = await fetch('https://panel-pracownika-api.onrender.com/api/User/me', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                if (!res.ok) throw new Error('Token invalid');
+            } catch (err) {
+                logout();
+            }
+        };
+
+        validateToken();
+    }, [token]);
+
     const login = ({ token: newToken, user: userInfo }) => {
         setToken(newToken);
         setUser(userInfo);
