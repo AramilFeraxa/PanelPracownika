@@ -16,6 +16,7 @@ import AdminUsers from '../AdminDashboard/AdminUsers';
 import AdminSalary from '../AdminDashboard/AdminSalary';
 import AdminTasks from '../AdminDashboard/AdminTasks';
 import AdminWorkTime from '../AdminDashboard/AdminWorkTime';
+import NotFound from '../NotFound/NotFound';
 
 const App = () => {
   const { token } = useAuth();
@@ -75,6 +76,7 @@ const App = () => {
               <Route path="/admin/wynagrodzenia" element={protectedRoute(AdminSalary)} />
               <Route path="/admin/zadania" element={protectedRoute(AdminTasks)} />
               <Route path="/admin/czas-pracy" element={protectedRoute(AdminWorkTime)} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </div>
         </div>

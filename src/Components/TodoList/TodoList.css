@@ -13,7 +13,7 @@
 .todo-list h2,
 .todo-list h3 {
     margin-bottom: 20px;
-    color: #1c2a59;
+    color: var(--primary);
     padding-bottom: 6px;
 }
 
@@ -28,7 +28,7 @@
 }
 
 .todo-list button {
-    background-color: #1c2a59;
+    background-color: var(--primary);
     color: white;
     padding: 10px 16px;
     border: none;
@@ -84,7 +84,7 @@
 
 .todo-list .toggle-archived-btn {
     background-color: #99a9f0;
-    color: #1c2a59;
+    color: var(--primary);
     font-weight: bold;
 }
 

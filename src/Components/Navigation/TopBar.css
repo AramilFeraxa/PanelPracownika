@@ -3,7 +3,7 @@
     width: 100%;
     height: 60px;
     top: 0;
-    background-color: #1c2a59;
+    background-color: var(--primary);
     color: white;
     display: flex;
     align-items: center;

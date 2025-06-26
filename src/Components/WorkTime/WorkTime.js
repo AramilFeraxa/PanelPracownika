@@ -16,6 +16,33 @@ const TimeTracker = () => {
 
     const token = localStorage.getItem('token');
 
+    const [currentUser, setCurrentUser] = useState('');
+
+    useEffect(() => {
+        const fetchCurrentUser = async () => {
+            try {
+                const response = await fetch('https://panel-pracownika-api.onrender.com/api/User/profile', {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const userData = await response.json();
+                    setCurrentUser(`${userData.name}_${userData.surname}`);
+                } else {
+                    console.error('Failed to fetch user data');
+                }
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+
+        if (token) {
+            fetchCurrentUser();
+        }
+    }, [token]);
+
     const fetchWorkHistory = async () => {
         try {
             const resp = await fetch('https://panel-pracownika-api.onrender.com/api/WorkTime', {
@@ -38,6 +65,7 @@ const TimeTracker = () => {
             const data = JSON.parse(text);
             const groupedData = groupByMonthAndYear(data);
             setHistory(groupedData);
+            console.log('Pobrano historię pracy:', groupedData);
         } catch (err) {
             console.error(err);
             setError('Wystąpił błąd przy pobieraniu danych.');
@@ -185,7 +213,7 @@ const TimeTracker = () => {
             XLSX.utils.book_append_sheet(workbook, ws, new Date(0, selectedMonth).toLocaleString('pl-PL', { month: 'long' }));
         }
 
-        XLSX.writeFile(workbook, `Mateusz_Kopec_godziny_${new Date(0, selectedMonth).toLocaleString('pl-PL', { month: 'long' })}_${selectedYear}.xlsx`);
+        XLSX.writeFile(workbook, `${currentUser}_godziny_${new Date(0, selectedMonth).toLocaleString('pl-PL', { month: 'long' })}_${selectedYear}.xlsx`);
     };
 
     const calculateTotalHours = () => {
@@ -215,7 +243,7 @@ const TimeTracker = () => {
             </div>
             <div className="buttons">
                 <button onClick={() => saveWorkTime(null)}>Zapisz</button>
-                <button onClick={exportToExcel}>Eksportuj do Excela</button>
+                <button onClick={exportToExcel} className="excel-button">Eksportuj do Excela</button>
             </div>
             <div>
                 <label>Wybierz rok:</label>
