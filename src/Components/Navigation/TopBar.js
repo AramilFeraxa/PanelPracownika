@@ -15,7 +15,10 @@ const TopBar = ({ tasks, onToggleSidebar }) => {
 
         const filteredTasks = tasks.filter(task => {
             const dueDate = new Date(task.dueDate);
-            return dueDate >= currentDate && dueDate <= nextDay && !task.completed;
+            return (
+                (dueDate >= currentDate && dueDate <= nextDay && !task.completed) ||
+                (dueDate < currentDate && !task.completed)
+            );
         });
 
         setUpcomingTasks(filteredTasks);
@@ -55,14 +58,14 @@ const TopBar = ({ tasks, onToggleSidebar }) => {
                     {upcomingTasks.length > 0 ? (
                         upcomingTasks.map(task => (
                             <div key={task.id} className="notification-item">
-                                Zadania do wykonania na jutro:<br /><br />
+                                Zadania do wykonania:<br /><br />
                                 <a href="/todo-list">
                                     ▪️ {task.text} - termin: {new Date(task.dueDate).toLocaleDateString()}
                                 </a>
                             </div>
                         ))
                     ) : (
-                        <div>Brak zadań do wykonania w ciągu następnego dnia.</div>
+                        <div>Brak aktualnych zadań do wykonania.</div>
                     )}
                 </div>
             )}

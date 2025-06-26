@@ -47,7 +47,6 @@
 .notification-count {
     position: absolute;
     top: -6px;
-    right: -10px;
     background-color: red;
     color: white;
     border-radius: 50%;
@@ -73,6 +72,11 @@
     font-size: 14px;
     padding: 10px 0;
     border-bottom: 1px solid #eee;
+}
+
+.notification-item a {
+    color: var(--secondary);
+    text-decoration: none;
 }
 
 .notification-item:last-child {
