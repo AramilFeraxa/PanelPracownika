@@ -59,7 +59,7 @@ const TopBar = ({ tasks, onToggleSidebar }) => {
                         upcomingTasks.map(task => (
                             <div key={task.id} className="notification-item">
                                 Zadania do wykonania:<br /><br />
-                                <a href="/todo-list">
+                                <a href="/todo">
                                     ▪️ {task.text} - termin: {new Date(task.dueDate).toLocaleDateString()}
                                 </a>
                             </div>
